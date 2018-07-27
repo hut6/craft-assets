@@ -130,7 +130,7 @@ class AssetsTwigExtension extends \Twig_Extension
      */
     private function getWebPath(string $file): string
     {
-        return (string)str_replace('//', '/', Craft::$app->getSites()->getCurrentSite()->baseUrl . '/' . $this->webPath . '/' . $file);
+        return Craft::$app->getSites()->getCurrentSite()->baseUrl . str_replace('//', '/', '/' . $file);
     }
 
     /**
