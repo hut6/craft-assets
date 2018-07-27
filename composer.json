@@ -1,0 +1,40 @@
+{
+    "name": "hut6/assets",
+    "description": "Utilities, eg asset()",
+    "type": "craft-plugin",
+    "version": "0.1",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "assets"
+    ],
+    "support": {
+        "docs": "https://github.com/hut6/assets/blob/master/README.md",
+        "issues": "https://github.com/hut6/assets/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "HutSix",
+            "homepage": "https://hutsix.com.au"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "hut6\\assets\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Assets",
+        "handle": "assets",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/hut6/assets/master/CHANGELOG.md",
+        "class": "hut6\\assets\\Assets"
+    }
+}
