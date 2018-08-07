@@ -1,5 +1,5 @@
 {
-    "name": "hut6/assets",
+    "name": "hut6/hutsixassets",
     "description": "Utilities, eg asset()",
     "type": "craft-plugin",
     "version": "0.2",
@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-          "hut6\\assets\\": "src/"
+          "hut6\\hutsixassets\\": "src/"
         }
     },
     "extra": {

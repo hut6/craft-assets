@@ -10,7 +10,7 @@
 
 namespace hut6\hutsixassets;
 
-use hut6\assets\twigextensions\HutsixassetsTwigExtension;
+use hut6\hutsixassets\twigextensions\HutsixassetsTwigExtension;
 
 use Craft;
 use craft\base\Plugin;
@@ -110,7 +110,7 @@ class Hutsixassets extends Plugin
  */
         Craft::info(
             Craft::t(
-                'assets',
+                'hutsixassets',
                 '{name} plugin loaded',
                 ['name' => $this->name]
             ),
