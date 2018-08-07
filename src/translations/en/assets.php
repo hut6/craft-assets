@@ -1,6 +1,6 @@
 <?php
 /**
- * Assets plugin for Craft CMS 3.x
+ * Hutsixassets plugin for Craft CMS 3.x
  *
  * Utilities, eg asset()
  *
@@ -9,7 +9,7 @@
  */
 
 /**
- * Assets en Translation
+ * Hutsixassets en Translation
  *
  * Returns an array with the string to be translated (as passed to `Craft::t('assets', '...')`) as
  * the key, and the translation as the value.
@@ -21,5 +21,5 @@
  * @since     0.1
  */
 return [
-    'Assets plugin loaded' => 'Assets plugin loaded',
+    'Hutsixassets plugin loaded' => 'Hutsixassets plugin loaded',
 ];

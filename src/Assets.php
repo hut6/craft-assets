@@ -1,6 +1,6 @@
 <?php
 /**
- * Assets plugin for Craft CMS 3.x
+ * Hutsixassets plugin for Craft CMS 3.x
  *
  * Utilities, eg asset()
  *
@@ -8,9 +8,9 @@
  * @copyright Copyright (c) 2018 HutSix
  */
 
-namespace hut6\assets;
+namespace hut6\hutsixassets;
 
-use hut6\assets\twigextensions\AssetsTwigExtension;
+use hut6\assets\twigextensions\HutsixassetsTwigExtension;
 
 use Craft;
 use craft\base\Plugin;
@@ -30,20 +30,20 @@ use yii\base\Event;
  * https://craftcms.com/docs/plugins/introduction
  *
  * @author    HutSix
- * @package   Assets
+ * @package   Hutsixassets
  * @since     0.1
  *
  */
-class Assets extends Plugin
+class Hutsixassets extends Plugin
 {
     // Static Properties
     // =========================================================================
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * Assets::$plugin
+     * Hutsixassets::$plugin
      *
-     * @var Assets
+     * @var Hutsixassets
      */
     public static $plugin;
 
@@ -62,7 +62,7 @@ class Assets extends Plugin
 
     /**
      * Set our $plugin static property to this class so that it can be accessed via
-     * Assets::$plugin
+     * Hutsixassets::$plugin
      *
      * Called after the plugin class is instantiated; do any one-time initialization
      * here such as hooks and events.
@@ -77,7 +77,7 @@ class Assets extends Plugin
         self::$plugin = $this;
 
         // Add in our Twig extensions
-        Craft::$app->view->registerTwigExtension(new AssetsTwigExtension());
+        Craft::$app->view->registerTwigExtension(new HutsixassetsTwigExtension());
 
         // Do something after we're installed
         Event::on(

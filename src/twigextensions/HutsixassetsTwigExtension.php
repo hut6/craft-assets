@@ -1,6 +1,6 @@
 <?php
 /**
- * Assets plugin for Craft CMS 3.x
+ * Hutsixassets plugin for Craft CMS 3.x
  *
  * Utilities, eg asset()
  *
@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2018 HutSix
  */
 
-namespace hut6\assets\twigextensions;
+namespace hut6\hutsixassets\twigextensions;
 
 use club\assetrev\exceptions\ContinueException;
 use Craft;
@@ -22,10 +22,10 @@ use Twig\TwigFunction;
  * http://twig.sensiolabs.org/doc/advanced.html
  *
  * @author    HutSix
- * @package   Assets
+ * @package   Hutsixassets
  * @since     0.1
  */
-class AssetsTwigExtension extends \Twig_Extension
+class HutsixassetsTwigExtension extends \Twig_Extension
 {
     // Public Methods
     // =========================================================================
@@ -39,7 +39,7 @@ class AssetsTwigExtension extends \Twig_Extension
      */
     public function getName(): string
     {
-        return 'Assets';
+        return 'Hutsixassets';
     }
 
     /**

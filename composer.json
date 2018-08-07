@@ -2,7 +2,7 @@
     "name": "hut6/assets",
     "description": "Utilities, eg asset()",
     "type": "craft-plugin",
-    "version": "0.1",
+    "version": "0.2",
     "keywords": [
         "craft",
         "cms",
@@ -30,11 +30,11 @@
         }
     },
     "extra": {
-        "name": "Assets",
-        "handle": "assets",
+        "name": "Hutsixassets",
+        "handle": "hutsixassets",
         "hasCpSettings": false,
         "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/hut6/assets/master/CHANGELOG.md",
-        "class": "hut6\\assets\\Assets"
+        "class": "hut6\\hutsixassets\\Hutsixassets"
     }
 }
