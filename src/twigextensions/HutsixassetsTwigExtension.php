@@ -1,6 +1,6 @@
 <?php
 /**
- * Hutsixassets plugin for Craft CMS 3.x
+ * Assets plugin for Craft CMS 3.x
  *
  * Utilities, eg asset()
  *
@@ -8,10 +8,10 @@
  * @copyright Copyright (c) 2018 HutSix
  */
 
-namespace hut6\hutsixassets\twigextensions;
+namespace hut6\assets\twigextensions;
 
-use club\assetrev\exceptions\ContinueException;
 use Craft;
+use Exception;
 use Twig\TwigFunction;
 
 /**
@@ -22,10 +22,10 @@ use Twig\TwigFunction;
  * http://twig.sensiolabs.org/doc/advanced.html
  *
  * @author    HutSix
- * @package   Hutsixassets
+ * @package   Assets
  * @since     0.1
  */
-class HutsixassetsTwigExtension extends \Twig_Extension
+class AssetsTwigExtension extends \Twig_Extension
 {
     // Public Methods
     // =========================================================================
@@ -39,7 +39,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     public function getName(): string
     {
-        return 'Hutsixassets';
+        return 'Assets';
     }
 
     /**
@@ -99,7 +99,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
         $this->checkExists($file, $path);
 
-        return sprintf('<span class="icon svg-icon %s">%s</span>', $class, file_get_contents($path));
+        return sprintf('<span class="svg-icon %s">%s</span>', $class, file_get_contents($path));
     }
 
     /**
@@ -130,21 +130,22 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     private function getWebPath(string $file): string
     {
-        return Craft::$app->getSites()->getCurrentSite()->baseUrl . str_replace('//', '/', '/' . $file);
+        return Craft::$app->getSites()->getCurrentSite()->baseUrl . str_replace('//', '/', $this->webPath . '/' . $file);
     }
 
     /**
      * @param $file
      * @param $path
      * @return mixed
-     * @throws ContinueException
+     * @throws Exception
      */
     private function checkExists(string $file, string $path)
     {
         if (file_exists($path)) {
             return $path;
         }
-        throw new ContinueException("Cannot find `$file`.");
+
+        throw new Exception("Cannot find `$file`.");
     }
 
     /**
