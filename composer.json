@@ -2,7 +2,7 @@
     "name": "hut6/hutsixassets",
     "description": "Utilities, eg asset()",
     "type": "craft-plugin",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "keywords": [
         "craft",
         "cms",
