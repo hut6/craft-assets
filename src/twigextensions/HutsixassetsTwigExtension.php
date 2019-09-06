@@ -50,6 +50,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
     {
         return [
             new TwigFunction('asset', [$this, 'getAsset'], ['is_safe' => ['html']]),
+            new TwigFunction('asset_exists', [$this, 'assetExists']),
             new TwigFunction('embedSvg', [$this, 'inlineSvg'], ['is_safe' => ['html']]),
             new TwigFunction('embedSvgIcon', [$this, 'inlineSvgIcon'], ['is_safe' => ['html']]),
             new TwigFunction('has_manifest', [$this, 'hasAssetManifest']),
@@ -71,6 +72,24 @@ class HutsixassetsTwigExtension extends \Twig_Extension
         $this->checkExists($file, $path);
 
         return $fullPath ? $this->getWebPath($file) : $this->normalise($file);
+    }
+
+    /**
+     * @param string $file
+     * @param bool $fullPath
+     * @return string
+     * @throws ContinueException
+     * @throws \craft\errors\SiteNotFoundException
+     */
+    public function assetExists(string $file, $fullPath = false): string
+    {
+        $path = $this->getBasePath($file);
+        try {
+            $this->checkExists($file, $path);
+        } catch (\Exception $exception) {
+            return false;
+        }
+        return true;
     }
 
     /**
