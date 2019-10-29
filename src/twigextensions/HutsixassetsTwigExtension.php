@@ -144,6 +144,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     private function getBasePath(string $file): string
     {
+        $file = parse_url($file)['path'];
         return (string)str_replace('//', '/', CRAFT_BASE_PATH . '/' . $this->webPath . '/' . $file);
     }
 
