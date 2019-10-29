@@ -113,13 +113,17 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      * @return string
      * @throws ContinueException
      */
-    public function inlineSvgIcon(string $file, string $class = null): string
+    public function inlineSvgIcon(string $file, string $class = null, string $ariaLabel = ''): string
     {
         $path = $this->getBasePath($file);
 
         $this->checkExists($file, $path);
 
-        return sprintf('<span class="icon svg-icon %s">%s</span>', $class, file_get_contents($path));
+        return sprintf(
+            '<span class="icon svg-icon %s">%s</span>',
+            $class,
+            str_replace('<svg ', '<svg aria-label="'.$ariaLabel.'" ', file_get_contents($path))
+        );
     }
 
     /**
