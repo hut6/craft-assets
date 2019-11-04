@@ -10,7 +10,6 @@
 
 namespace hut6\hutsixassets\twigextensions;
 
-use club\assetrev\exceptions\ContinueException;
 use Craft;
 use Twig\TwigFunction;
 
@@ -25,6 +24,11 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      * @var string
      */
     protected $webPath = 'web';
+
+    /**
+     * @var array
+     */
+    protected $decodedManifest = [];
 
     /**
      * Returns the name of the extension.
@@ -54,7 +58,6 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      * @param string $file
      * @param bool $fullPath
      * @return string
-     * @throws ContinueException
      * @throws \craft\errors\SiteNotFoundException
      */
     public function getAsset(string $file, bool $absolute = false): string
@@ -143,7 +146,11 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     public function getManifestData(): array
     {
-        return json_decode(file_get_contents($this->getManifestPath()), true);
+        if(!$this->decodedManifest) {
+            $this->decodedManifest = json_decode(file_get_contents($this->getManifestPath()), true);
+        }
+
+        return $this->decodedManifest;
     }
 
     /**
@@ -211,10 +218,10 @@ class HutsixassetsTwigExtension extends \Twig_Extension
     public function inlineSvg(string $file, string $class = null): string
     {
         return sprintf(
-                '<span class="svg %s">%s</span>',
-                $class,
-                $this->file_get_contents($this->getActualPath($file))
-            );
+            '<span class="svg %s">%s</span>',
+            $class,
+            $this->file_get_contents($this->getActualPath($file))
+        );
     }
 
     /**
