@@ -12,25 +12,18 @@ namespace hut6\hutsixassets\twigextensions;
 
 use club\assetrev\exceptions\ContinueException;
 use Craft;
-use Exception;
 use Twig\TwigFunction;
 
 /**
- * Twig can be extended in many ways; you can add extra tags, filters, tests, operators,
- * global variables, and functions. You can even extend the parser itself with
- * node visitors.
- *
- * http://twig.sensiolabs.org/doc/advanced.html
- *
  * @author    HutSix
  * @package   Hutsixassets
  * @since     0.1
  */
 class HutsixassetsTwigExtension extends \Twig_Extension
 {
-    // Public Methods
-    // =========================================================================
-
+    /**
+     * @var string
+     */
     protected $webPath = 'web';
 
     /**
@@ -53,7 +46,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
             new TwigFunction('asset_exists', [$this, 'assetExists']),
             new TwigFunction('embedSvg', [$this, 'inlineSvg'], ['is_safe' => ['html']]),
             new TwigFunction('embedSvgIcon', [$this, 'inlineSvgIcon'], ['is_safe' => ['html']]),
-            new TwigFunction('has_manifest', [$this, 'hasAssetManifest']),
+            new TwigFunction('has_manifest', [$this, 'manifestExists']),
         ];
     }
 
@@ -64,14 +57,118 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      * @throws ContinueException
      * @throws \craft\errors\SiteNotFoundException
      */
-    public function getAsset(string $file, $fullPath = false): string
+    public function getAsset(string $file, bool $absolute = false): string
     {
+        $path = $this->getActualPath($file);
 
-        $path = $this->getBasePath($file);
+        if ($this->isUrl($path)) {
+            return $path;
+        }
 
-        $this->checkExists($file, $path);
+        return $this->getWebPath($path, $absolute);
+    }
 
-        return $fullPath ? $this->getWebPath($file) : $this->normalise($file);
+    /**
+     * @param $file
+     * @return string
+     */
+    private function getActualPath(string $file): string
+    {
+        $path = $this->toAbsolutePath($file);
+
+        if (file_exists($path)) {
+            return $path;
+        }
+
+        if ($this->manifestExists()) {
+            $data = $this->getManifestData();
+            $key = ltrim($file, '/');
+            if (array_key_exists($key, $data)) {
+                return $this->toAbsolutePath($data[$key]);
+            }
+        }
+
+        if ($this->isUrl($file)) {
+            $file_headers = @get_headers($file);
+            if ($file_headers[0] !== 'HTTP/1.1 404 Not Found') {
+                return $file;
+            }
+        }
+    }
+
+    /**
+     * @param $file
+     * @return mixed
+     */
+    private function toAbsolutePath($file)
+    {
+        if ($this->isUrl($file)) {
+            return $file;
+        }
+
+        return str_replace('//', '/', CRAFT_BASE_PATH.'/'.$this->webPath.'/'.$file);
+    }
+
+    /**
+     * @param string $file
+     * @return mixed
+     */
+    private function isUrl(string $file)
+    {
+        return filter_var($file, FILTER_VALIDATE_URL);
+    }
+
+    /**
+     * In development check for existence of asset manifest
+     *
+     * @return bool
+     */
+    public function manifestExists(): bool
+    {
+        return file_exists($this->getManifestPath());
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getManifestPath()
+    {
+        return $this->toAbsolutePath('/assets/manifest.json');
+    }
+
+    /**
+     * In development check for existence of asset manifest
+     *
+     * @return bool
+     */
+    public function getManifestData(): array
+    {
+        return json_decode(file_get_contents($this->getManifestPath()), true);
+    }
+
+    /**
+     * @param $path
+     * @return string
+     * @throws \craft\errors\SiteNotFoundException
+     */
+    private function getWebPath(string $path, bool $absolute = false): string
+    {
+        $path = $this->toRelativePath($path);
+
+        if ($absolute) {
+            return Craft::$app->getSites()->getCurrentSite()->baseUrl.$path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * @param $file
+     * @return mixed
+     */
+    private function toRelativePath($file)
+    {
+        return str_replace(CRAFT_BASE_PATH.'/'.$this->webPath.'/', '/', $file);
     }
 
     /**
@@ -81,15 +178,28 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      * @throws ContinueException
      * @throws \craft\errors\SiteNotFoundException
      */
-    public function assetExists(string $file, $fullPath = false): string
+    public function assetExists(string $file): string
     {
-        $path = $this->getBasePath($file);
-        try {
-            $this->checkExists($file, $path);
-        } catch (\Exception $exception) {
-            return false;
+        $path = $this->getActualPath($file);
+
+        if ($this->isUrl($path)) {
+            $file_headers = @get_headers($path);
+
+            return $file_headers[0] == 'HTTP/1.1 404 Not Found';
         }
-        return true;
+
+        return file_exists($path);
+    }
+
+    /**
+     * @param string $file
+     * @param string|null $class
+     * @return string
+     * @throws ContinueException
+     */
+    public function inlineSvgIcon(string $file, string $class = null): string
+    {
+        return $this->inlineSvg($file, "svg-icon ".$class);
     }
 
     /**
@@ -100,89 +210,36 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     public function inlineSvg(string $file, string $class = null): string
     {
-        $path = $this->getBasePath($file);
-
-        $this->checkExists($file, $path);
-
-        return sprintf('<span class="svg %s">%s</span>', $class, file_get_contents($path));
+        return sprintf(
+                '<span class="svg %s">%s</span>',
+                $class,
+                $this->file_get_contents($this->getActualPath($file))
+            );
     }
 
     /**
      * @param string $file
-     * @param string|null $class
-     * @return string
-     * @throws ContinueException
+     * @return bool|false|string
      */
-    public function inlineSvgIcon(string $file, string $class = null, string $ariaLabel = ''): string
+    private function file_get_contents(string $file)
     {
-        $path = $this->getBasePath($file);
+        if ($this->isUrl($file)) {
 
-        $this->checkExists($file, $path);
+            $client = new \GuzzleHttp\Client();
 
-        return sprintf(
-            '<span class="icon svg-icon %s">%s</span>',
-            $class,
-            str_replace('<svg ', '<svg aria-label="'.$ariaLabel.'" ', file_get_contents($path))
-        );
-    }
+            $res = $client->get(
+                $file,
+                [
+                    'curl' => [CURLOPT_SSL_VERIFYPEER => false],
+                    'verify',
+                    false,
+                ]
+            );
 
-    /**
-     * In development check for existence of asset manifest
-     *
-     * @return bool
-     */
-    public function hasAssetManifest(): bool
-    {
-        $manifestFile = CRAFT_BASE_PATH . '/' . $this->webPath . '/assets/manifest.json';
-
-        return file_exists($manifestFile);
-    }
-
-    /**
-     * @param $file
-     * @return string
-     */
-    private function getBasePath(string $file): string
-    {
-        $file = parse_url($file)['path'];
-        return (string)str_replace('//', '/', CRAFT_BASE_PATH . '/' . $this->webPath . '/' . $file);
-    }
-
-    /**
-     * @param $file
-     * @return string
-     * @throws \craft\errors\SiteNotFoundException
-     */
-    private function getWebPath(string $file): string
-    {
-        return Craft::$app->getSites()->getCurrentSite()->baseUrl . str_replace('//', '/', '/' . $file);
-    }
-
-    /**
-     * @param $file
-     * @param $path
-     * @return mixed
-     * @throws ContinueException
-     */
-    private function checkExists(string $file, string $path)
-    {
-        if (file_exists($path)) {
-            return $path;
-        }
-        throw new \Exception("Cannot find `$file`.");
-    }
-
-    /**
-     * @param $file
-     * @return string
-     */
-    private function normalise(string $file): string
-    {
-        if (strpos($file, '/') !== 0) {
-            return '/' . $file;
+            return $res->getBody()->getContents();
         }
 
-        return $file;
+        return file_get_contents($file);
     }
 
 }
