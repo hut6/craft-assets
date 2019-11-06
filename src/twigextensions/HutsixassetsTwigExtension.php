@@ -97,6 +97,8 @@ class HutsixassetsTwigExtension extends \Twig_Extension
                 return $file;
             }
         }
+        
+        throw new \Exception('Could not find '.$file);
     }
 
     /**
