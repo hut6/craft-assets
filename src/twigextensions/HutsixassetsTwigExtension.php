@@ -56,7 +56,8 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param string $file
-     * @param bool $fullPath
+     * @param bool   $fullPath
+     *
      * @return string
      * @throws \craft\errors\SiteNotFoundException
      */
@@ -73,6 +74,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param $file
+     *
      * @return string
      */
     private function getActualPath(string $file): string
@@ -97,12 +99,13 @@ class HutsixassetsTwigExtension extends \Twig_Extension
                 return $file;
             }
         }
-        
+
         throw new \Exception('Could not find '.$file);
     }
 
     /**
      * @param $file
+     *
      * @return mixed
      */
     private function toAbsolutePath($file)
@@ -116,6 +119,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param string $file
+     *
      * @return mixed
      */
     private function isUrl(string $file)
@@ -148,7 +152,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     public function getManifestData(): array
     {
-        if(!$this->decodedManifest) {
+        if (!$this->decodedManifest) {
             $this->decodedManifest = json_decode(file_get_contents($this->getManifestPath()), true);
         }
 
@@ -157,6 +161,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param $path
+     *
      * @return string
      * @throws \craft\errors\SiteNotFoundException
      */
@@ -173,6 +178,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param $file
+     *
      * @return mixed
      */
     private function toRelativePath($file)
@@ -182,27 +188,28 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param string $file
-     * @param bool $fullPath
+     * @param bool   $fullPath
+     *
      * @return string
      * @throws ContinueException
      * @throws \craft\errors\SiteNotFoundException
      */
     public function assetExists(string $file): string
     {
-        $path = $this->getActualPath($file);
-
-        if ($this->isUrl($path)) {
-            $file_headers = @get_headers($path);
-
-            return $file_headers[0] == 'HTTP/1.1 404 Not Found';
+        try {
+            $this->getActualPath($file);
+        } catch (\Exception $e) {
+            return false;
         }
 
-        return file_exists($path);
+        return true;
+
     }
 
     /**
-     * @param string $file
+     * @param string      $file
      * @param string|null $class
+     *
      * @return string
      * @throws ContinueException
      */
@@ -212,8 +219,9 @@ class HutsixassetsTwigExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $file
+     * @param string      $file
      * @param string|null $class
+     *
      * @return string
      * @throws ContinueException
      */
@@ -228,6 +236,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
 
     /**
      * @param string $file
+     *
      * @return bool|false|string
      */
     private function file_get_contents(string $file)
