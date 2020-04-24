@@ -114,6 +114,10 @@ class HutsixassetsTwigExtension extends \Twig_Extension
             return $file;
         }
 
+        if (file_exists(CRAFT_BASE_PATH.$file)) {
+            return CRAFT_BASE_PATH.$file;
+        }
+
         return str_replace('//', '/', CRAFT_BASE_PATH.'/'.$this->webPath.'/'.$file);
     }
 
