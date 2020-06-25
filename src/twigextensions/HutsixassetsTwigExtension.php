@@ -146,7 +146,7 @@ class HutsixassetsTwigExtension extends \Twig_Extension
      */
     private function getManifestPath()
     {
-        return $this->toAbsolutePath('/assets/manifest.json');
+        return getenv('MANIFEST_PATH') ?: $this->toAbsolutePath('/assets/manifest.json');
     }
 
     /**
