@@ -1,0 +1,49 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "85deca7785563723bbf60ad97032f26b",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "hut6/tag-release",
+            "version": "1.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hut6/tag-release.git",
+                "reference": "35a2ffefd437336e1ffa622b8c37fcbd1ffc4076"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hut6/tag-release/zipball/35a2ffefd437336e1ffa622b8c37fcbd1ffc4076",
+                "reference": "35a2ffefd437336e1ffa622b8c37fcbd1ffc4076",
+                "shasum": ""
+            },
+            "bin": [
+                "tag-release"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "HutSix",
+                    "email": "team@hutsix.com.au"
+                }
+            ],
+            "description": "Release tagging...",
+            "time": "2020-03-25T02:13:27+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

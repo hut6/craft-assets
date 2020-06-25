@@ -5,6 +5,7 @@
 
 # COMPOSER
 /vendor
+/bin
 
 # BUILD FILES
 /bower_components/*
